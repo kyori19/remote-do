@@ -9,6 +9,7 @@ on:
 jobs:
   build:
     strategy:
+      fail-fast: false
       matrix:
         target:
           - aarch64-apple-darwin
@@ -35,7 +36,7 @@ jobs:
           key: ${{ matrix.target }}-cargo-${{ hashFiles('**/Cargo.lock') }}
 
       - run: |
-          rustup show
+          rustup target add ${{ matrix.target }}
           cargo install cross
           cross test --target ${{ matrix.target }}
           cross build --release --target ${{ matrix.target }} --bins --artifact-dir target/release/bin -Z unstable-options
